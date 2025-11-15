@@ -1,0 +1,10 @@
+//@version=5
+indicator("ATR Trail Stop", overlay=true)
+
+atr = ta.atr(14)
+
+longStop = close - atr * 2
+shortStop = close + atr * 2
+
+plot(longStop, "Long Stop", color=color.green, linewidth=2)
+plot(shortStop, "Short Stop", color=color.red, linewidth=2)
