@@ -1,0 +1,18 @@
+//@version=5
+indicator("Dynamic EMA Ribbon", overlay=true)
+
+ema20 = ta.ema(close, 20)
+ema50 = ta.ema(close, 50)
+ema100 = ta.ema(close, 100)
+
+bull = ema20 > ema50 and ema50 > ema100
+bear = ema20 < ema50 and ema50 < ema100
+
+plot(ema20, color=color.teal)
+plot(ema50, color=color.orange)
+plot(ema100, color=color.purple)
+
+bgcolor(bull ? color.new(color.green, 85) : bear ? color.new(color.red, 85) : na)
+
+alertcondition(ta.crossover(ema20, ema50), "Bullish Cross", "EMA20 crossed above EMA50")
+alertcondition(ta.crossunder(ema20, ema50), "Bearish Cross", "EMA20 crossed below EMA50")
