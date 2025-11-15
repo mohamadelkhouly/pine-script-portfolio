@@ -1,0 +1,67 @@
+// @version=5
+indicator("Enhanced RSI Divergence", overlay=true, max_lines_count=500)
+
+// Inputs
+rsi_length = input.int(14, title="RSI Length", minval=1)
+pivot_lb = input.int(5, title="Pivot Lookback Left/Right", minval=1)
+
+// Calculate RSI
+rsi = ta.rsi(close, rsi_length)
+
+// Detect price pivots
+price_ph = ta.pivothigh(high, pivot_lb, pivot_lb)
+price_pl = ta.pivotlow(low, pivot_lb, pivot_lb)
+
+// Variables to store previous price pivots and corresponding RSI values
+var float prev_price_ph = na
+var float prev_rsi_at_ph = na
+var int prev_ph_bar = na
+
+var float prev_price_pl = na
+var float prev_rsi_at_pl = na
+var int prev_pl_bar = na
+
+// Current bar for pivots (pivots are detected pivot_lb bars ago)
+int current_bar = bar_index - pivot_lb
+
+// Lines for latest divergences
+var line bearish_line = na
+var label bearish_label = na
+var line bullish_line = na
+var label bullish_label = na
+
+// Bearish Divergence (Higher High in price, Lower High in RSI)
+if not na(price_ph)
+    float rsi_at_ph = rsi[pivot_lb]
+    if not na(prev_price_ph) and price_ph > prev_price_ph and rsi_at_ph < prev_rsi_at_ph
+        // Delete old line and label if exist
+        if not na(bearish_line)
+            line.delete(bearish_line)
+        if not na(bearish_label)
+            label.delete(bearish_label)
+        // Draw new line on price
+        bearish_line := line.new(prev_ph_bar, prev_price_ph, current_bar, price_ph, color=color.red, width=2, style=line.style_dashed)
+        // Add new label
+        bearish_label := label.new(current_bar, price_ph, "Bearish Div", style=label.style_label_down, color=color.red, textcolor=color.white)
+    // Update previous
+    prev_price_ph := price_ph
+    prev_rsi_at_ph := rsi_at_ph
+    prev_ph_bar := current_bar
+
+// Bullish Divergence (Lower Low in price, Higher Low in RSI)
+if not na(price_pl)
+    float rsi_at_pl = rsi[pivot_lb]
+    if not na(prev_price_pl) and price_pl < prev_price_pl and rsi_at_pl > prev_rsi_at_pl
+        // Delete old line and label if exist
+        if not na(bullish_line)
+            line.delete(bullish_line)
+        if not na(bullish_label)
+            label.delete(bullish_label)
+        // Draw new line on price
+        bullish_line := line.new(prev_pl_bar, prev_price_pl, current_bar, price_pl, color=color.green, width=2, style=line.style_dashed)
+        // Add new label
+        bullish_label := label.new(current_bar, price_pl, "Bullish Div", style=label.style_label_up, color=color.green, textcolor=color.white)
+    // Update previous
+    prev_price_pl := price_pl
+    prev_rsi_at_pl := rsi_at_pl
+    prev_pl_bar := current_bar
