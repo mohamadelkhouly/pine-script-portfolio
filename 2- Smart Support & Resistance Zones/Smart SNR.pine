@@ -1,59 +1,62 @@
 //@version=5
-indicator("Smart Support & Resistance", overlay=true)
+indicator("Smart Support & Resistance Zones | Close Pivot + Wick Zone", overlay=true)
 
-extend = input.int(30, "Extend Line")
-leftrightCandle = input.int(20, "Left Right Candle")
+extend   = input.int(30, "Extend Right Bars")
+lr       = input.int(10, "Left/Right Pivot Bars")
+lookback = 2
 
-ph = ta.pivothigh(high, leftrightCandle, leftrightCandle)
-pl = ta.pivotlow(low, leftrightCandle, leftrightCandle)
+var box resZone = na
+var box supZone = na
 
-ph_index = ta.valuewhen(ph, bar_index - leftrightCandle, 0)
-pl_index = ta.valuewhen(pl, bar_index - leftrightCandle, 0)
+// shared right side for alignment
+var int sharedRight = na
 
-// Variables for storing lines and their reference values
-var line resLine = na
-var int resIndex = na
-var float resPrice = na
+// === Pivot detection based on CLOSE ===
+ph_close = ta.pivothigh(close, lr, lr)
+pl_close = ta.pivotlow(close, lr, lr)
 
-var line supLine = na
-var int supIndex = na
-var float supPrice = na
+// Pivot indexes
+ph_index = ta.valuewhen(not na(ph_close), bar_index - lr, 0)
+pl_index = ta.valuewhen(not na(pl_close), bar_index - lr, 0)
 
-// ================= RESISTANCE LINE ================= //
-if ph
-    // Store pivot index and price
-    resIndex := int(ph_index)
-    resPrice := ph
+// update right side every bar
+sharedRight := bar_index + extend
 
-    // Create the line if it does not exist, otherwise update it
-    if na(resLine)
-        resLine := line.new(resIndex, resPrice, bar_index + extend, resPrice, color=color.red)
+// ================= RESISTANCE ================= //
+highestWick = ta.highest(high[lr - 1], lookback)
+if not na(ph_close)
+    resBottom = ph_close
+    resTop = highestWick
+
+    if na(resZone)
+        resZone := box.new(int(ph_index), resTop, sharedRight, resBottom,
+                           bgcolor = color.new(color.red, 70), border_color = color.red)
     else
-        line.set_x1(resLine, resIndex)
-        line.set_y1(resLine, resPrice)
-        line.set_x2(resLine, bar_index + extend)
-        line.set_y2(resLine, resPrice)
-
-// Always extend line to the newest bar
-if not na(resLine)
-    line.set_x2(resLine, bar_index + extend)
+        box.set_left(resZone, int(ph_index))
+        box.set_top(resZone, resTop)
+        box.set_bottom(resZone, resBottom)
 
 
-// ================= SUPPORT LINE ================= //
-if pl
-    // Store pivot index and price
-    supIndex := int(pl_index)
-    supPrice := pl
+// always align right side with shared value
+if not na(resZone)
+    box.set_right(resZone, sharedRight)
 
-    // Create the line if it does not exist, otherwise update it
-    if na(supLine)
-        supLine := line.new(supIndex, supPrice, bar_index + extend, supPrice, color=color.green)
+
+// ================= SUPPORT ================= //
+lowestWick = ta.lowest(low[lr - 1], lookback)
+if not na(pl_close)
+    supTop = pl_close
+    supBottom = lowestWick
+
+    if na(supZone)
+        supZone := box.new(int(pl_index), supTop, sharedRight, supBottom,
+                           bgcolor = color.new(color.green, 70), border_color = color.green)
     else
-        line.set_x1(supLine, supIndex)
-        line.set_y1(supLine, supPrice)
-        line.set_x2(supLine, bar_index + extend)
-        line.set_y2(supLine, supPrice)
+        box.set_left(supZone, int(pl_index))
+        box.set_top(supZone, supTop)
+        box.set_bottom(supZone, supBottom)
 
-// Always extend line to the newest bar
-if not na(supLine)
-    line.set_x2(supLine, bar_index + extend)
+
+// always align right side with shared value
+if not na(supZone)
+    box.set_right(supZone, sharedRight)
