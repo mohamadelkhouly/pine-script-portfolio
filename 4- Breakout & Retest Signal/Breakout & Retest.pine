@@ -1,0 +1,16 @@
+//@version=5
+indicator("Breakout & Retest", overlay=true)
+
+hLevel = ta.highest(high, 20)
+lLevel = ta.lowest(low, 20)
+
+plot(hLevel, "Resistance", color=color.red)
+plot(lLevel, "Support", color=color.green)
+
+breakUp = close > lLevel
+retestUp = low <= lLevel and breakUp and close > close[1] and close > open[1]
+
+breakDn = close < hLevel
+retestDn = high >= hLevel and breakDn and close < close[1] and close < open[1]
+plotshape(retestUp, title="Buy", location=location.belowbar, color=color.green, style=shape.labelup, text="BUY")
+plotshape(retestDn, title="Sell", location=location.abovebar, color=color.red, style=shape.labeldown, text="SELL")
