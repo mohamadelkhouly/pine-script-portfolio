@@ -1,0 +1,59 @@
+//@version=5
+indicator("Smart Support & Resistance", overlay=true)
+
+extend = input.int(30, "Extend Line")
+leftrightCandle = input.int(20, "Left Right Candle")
+
+ph = ta.pivothigh(high, leftrightCandle, leftrightCandle)
+pl = ta.pivotlow(low, leftrightCandle, leftrightCandle)
+
+ph_index = ta.valuewhen(ph, bar_index - leftrightCandle, 0)
+pl_index = ta.valuewhen(pl, bar_index - leftrightCandle, 0)
+
+// Variables for storing lines and their reference values
+var line resLine = na
+var int resIndex = na
+var float resPrice = na
+
+var line supLine = na
+var int supIndex = na
+var float supPrice = na
+
+// ================= RESISTANCE LINE ================= //
+if ph
+    // Store pivot index and price
+    resIndex := int(ph_index)
+    resPrice := ph
+
+    // Create the line if it does not exist, otherwise update it
+    if na(resLine)
+        resLine := line.new(resIndex, resPrice, bar_index + extend, resPrice, color=color.red)
+    else
+        line.set_x1(resLine, resIndex)
+        line.set_y1(resLine, resPrice)
+        line.set_x2(resLine, bar_index + extend)
+        line.set_y2(resLine, resPrice)
+
+// Always extend line to the newest bar
+if not na(resLine)
+    line.set_x2(resLine, bar_index + extend)
+
+
+// ================= SUPPORT LINE ================= //
+if pl
+    // Store pivot index and price
+    supIndex := int(pl_index)
+    supPrice := pl
+
+    // Create the line if it does not exist, otherwise update it
+    if na(supLine)
+        supLine := line.new(supIndex, supPrice, bar_index + extend, supPrice, color=color.green)
+    else
+        line.set_x1(supLine, supIndex)
+        line.set_y1(supLine, supPrice)
+        line.set_x2(supLine, bar_index + extend)
+        line.set_y2(supLine, supPrice)
+
+// Always extend line to the newest bar
+if not na(supLine)
+    line.set_x2(supLine, bar_index + extend)
