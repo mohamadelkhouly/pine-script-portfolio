@@ -1,27 +1,32 @@
-RSI Divergence Indicator
+Detects bullish and bearish divergences between price and RSI (default 14) using pivot highs/lows.
 
-Detects bullish and bearish divergences between price and RSI (default length 14) using pivot highs/lows .
 
-Bearish Div: Price higher high + RSI lower high (red line + label)
+Bearish: Price HH + RSI LH (red line/label)
 
-Bullish Div: Price lower low + RSI higher low (green line + label)
 
-Old divergence marks are removed automatically.
+Bullish: Price LL + RSI HL (green line/label)
+Old marks removed automatically.
+
 
 Usage:
 
-Add to chart in Pine Editor.
 
-Adjust RSI length & pivot lookback.
+Add to chart, adjust RSI length & pivot lookback.
 
-Use divergence only as confirmation inside supply/demand zones.
+
+Use divergences as confirmation within supply/demand zones.
+
 
 Combine with price action or other tools for entries.
 
+
 Notes:
+
 
 Backtest before live trading.
 
+
 Educational use only.
 
-Customizations available: hidden divergences, alerts, MTF integration.
+
+Customizations: hidden divergences, alerts, multi-timeframe integration.
