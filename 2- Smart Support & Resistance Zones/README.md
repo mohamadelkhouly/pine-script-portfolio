@@ -1,27 +1,26 @@
-Smart Support & Resistance Zones – Usage Guide
+Automatically detects key support and resistance zones using pivot closes and wicks, updating dynamically and extending into future bars.
+Usage:
 
-This indicator automatically detects support and resistance zones using pivot closes and wick boundaries. It updates dynamically and extends zones into future bars for better price reaction analysis.
 
-How to Use (Recommended Strategy)
+Identify main zones on higher timeframe (Daily/H4).
 
-Open a higher timeframe (Daily or H4) and let the indicator draw the main key zones.
 
-Move to a lower timeframe (H1 or M30) and wait for price to return to one of the higher-TF zones.
+Switch to lower timeframe (H1/M30) and wait for price to return.
 
-Enter only after price action confirmation such as:
 
-Engulfing candle
+Confirm entries with price action: engulfing, pin bar, or structure breaks.
 
-Pin bar / Rejection
 
-Break of structure (BOS) or CHoCH
+Place stop loss outside zone wick; target ≥1:2 RRR.
 
-Set stop loss outside the zone wick and target minimum 1:2 RRR.
 
-Notes
+Notes:
 
-Use with trend filters and confluence for higher accuracy.
+
+Combine with trend filters and confluence for accuracy.
+
 
 Backtest before live trading.
 
-This tool is for analysis support, not financial advice.
+
+For analysis support only, not financial advice.
