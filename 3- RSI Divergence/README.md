@@ -1,6 +1,6 @@
 RSI Divergence Indicator
 
-Detects bullish and bearish divergences between price and RSI (default length 14) using pivot highs/lows (5-bar lookback).
+Detects bullish and bearish divergences between price and RSI (default length 14) using pivot highs/lows .
 
 Bearish Div: Price higher high + RSI lower high (red line + label)
 
